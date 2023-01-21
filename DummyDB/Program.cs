@@ -1,1 +1,7 @@
-﻿
+﻿namespace DummyDB
+{
+    class Program
+    {
+
+    }
+}

@@ -7,7 +7,7 @@
       "isPrimary": true
     },
     {
-      "name": "name",
+      "name": "fuulName",
       "type": "string",
       "isPrimary": false
     }
