@@ -4,7 +4,7 @@
     {
         public Reader Reader;
         public Book Book;
-        public DateTime Takedate;
+        public DateTime TakeDate;
         public DateTime ReturnDate;
     }
 }
