@@ -3,12 +3,12 @@
   "columns": [
     {
       "name": "readerId",
-      "type": "int",
+      "type": "uint",
       "isPrimary": true
     },
     {
       "name": "bookId",
-      "type": "int",
+      "type": "uint",
       "isPrimary": true
     },
     {

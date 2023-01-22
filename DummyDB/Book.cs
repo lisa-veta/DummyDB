@@ -2,10 +2,10 @@
 {
     class Book
     {
-        public int Id;
+        public uint Id;
         public string Author;
         public string Name;
-        public DateTime PublicationDate;
+        public uint PublicationDate;
         public uint СaseNumber;
         public uint ShelfNumber;
     }

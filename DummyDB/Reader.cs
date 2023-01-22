@@ -2,7 +2,8 @@
 {
     class Reader
     {
-        public int Id;
+        public uint Id;
         public string FullName;
+
     }
 }

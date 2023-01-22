@@ -3,7 +3,7 @@
   "columns": [
     {
       "name": "id",
-      "type": "int",
+      "type": "uint",
       "isPrimary": true
     },
     {
@@ -23,7 +23,7 @@
     },
     {
       "name": "caseNumber",
-      "type": "int",
+      "type": "uint",
       "isPrimary": false
     },
     {
