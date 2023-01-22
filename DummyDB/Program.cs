@@ -1,6 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Reflection.PortableExecutable;
+using System.Text;
 
 namespace DummyDB
 {
@@ -8,12 +11,31 @@ namespace DummyDB
     {
         static void Main()
         {
-            ///"Data\\Reader.csv"
-            List<Reader> readers = new List<Reader>();
-            List<Book> books = new List<Book>();
-            List<ReaderBook> readerBooks = new List<ReaderBook>();
+            //Console.OutputEncoding = Encoding.UTF8;
+            List<Reader> readers = Check.CheckDataReader("Data\\Reader.csv");
+            List<Book> books = Check.CheckDataBook("Data\\Book.csv");
+            List<ReaderBook> readerBooks = Check.CheckDataReaderBook("Data\\ReaderBook.csv");
 
-            readers = Check.CheckDataReader("Data\\Reader.csv");
+            Screen.Enter(books, readerBooks);
+        }
+    }
+
+    class Screen
+    {
+        public static void Enter(List<Book> books, List<ReaderBook> readerBooks)
+        {
+            ///Console.OutputEncoding = Encoding.UTF8;
+            Console.WriteLine("Cписок всех книг в библиотеке:\n");
+            foreach(Book book in books)
+            {
+                Console.Write($"\"{book.Name}\"");
+                foreach(ReaderBook readerBook in readerBooks)
+                {
+                    if (book.Id == readerBook.Book.Id && readerBook.ReturnDate == DateTime.MinValue)
+                        Console.Write($", читает {readerBook.Reader.FullName}");
+                }
+                Console.WriteLine("\n");
+            }
         }
     }
     class Check
@@ -25,7 +47,7 @@ namespace DummyDB
         public static List<Reader> CheckDataReader(string path)
         {
             int count = 1;
-            foreach(string line in File.ReadAllLines(path))
+            foreach(string line in File.ReadAllLines(path, Encoding.Default))
             {
                 string[] data = line.Split(';');
                 Reader reader = new Reader();
@@ -41,7 +63,7 @@ namespace DummyDB
             return readers;
         }
 
-        public static uint CheckReaderId(int count, string[] data, string path)
+        static uint CheckReaderId(int count, string[] data, string path)
         {
             uint id;
             if (uint.TryParse(data[0], out uint num))
@@ -67,7 +89,7 @@ namespace DummyDB
             return id;
         }
 
-        public static string CheckReaderFullName(int count, string fullName, string path)
+        static string CheckReaderFullName(int count, string fullName, string path)
         {
             if (fullName == "")
             {
@@ -84,7 +106,7 @@ namespace DummyDB
         public static List<Book> CheckDataBook(string path)
         {
             int count = 1;
-            foreach (string line in File.ReadAllLines(path))
+            foreach (string line in File.ReadAllLines(path, Encoding.Default))
             {
                 string[] data = line.Split(';');
                 CheckSize(data.Length, 6, path);
@@ -103,7 +125,7 @@ namespace DummyDB
             return books;
         }
 
-        public static uint CheckBookId(int count, string[] data, string path)
+        static uint CheckBookId(int count, string[] data, string path)
         {
             uint id;
             if (uint.TryParse(data[0], out uint num))
@@ -129,7 +151,7 @@ namespace DummyDB
             return id;
         }
         
-        public static string CheckBookAuthor(int count, string author, string path)
+        static string CheckBookAuthor(int count, string author, string path)
         {
             if(author == "")
             {
@@ -143,7 +165,7 @@ namespace DummyDB
             }
         }
 
-        public static string CheckBookName(int count, string name, string path)
+        static string CheckBookName(int count, string name, string path)
         {
             if (name == "")
             {
@@ -157,7 +179,7 @@ namespace DummyDB
             }
         }
 
-        public static uint CheckBookPublicationDate(int count, string[] data, string path)
+        static uint CheckBookPublicationDate(int count, string[] data, string path)
         {
             uint publicationDate;
             if (uint.TryParse(data[3], out uint num))
@@ -182,7 +204,7 @@ namespace DummyDB
             return publicationDate;
         }
 
-        public static uint CheckBookСaseNumber(int count, string[] data, string path)
+        static uint CheckBookСaseNumber(int count, string[] data, string path)
         {
             uint caseNumber;
             if (uint.TryParse(data[4], out uint num))
@@ -198,7 +220,7 @@ namespace DummyDB
             return caseNumber;
         }
 
-        public static uint CheckBookShelfNumber(int count, string[] data, string path)
+        static uint CheckBookShelfNumber(int count, string[] data, string path)
         {
             uint shelfNumber;
             if (uint.TryParse(data[5], out uint num))
@@ -218,7 +240,7 @@ namespace DummyDB
         {
             List<ReaderBook> readerBooks = new List<ReaderBook>();
             int count = 1;
-            foreach (string line in File.ReadAllLines(path))
+            foreach (string line in File.ReadAllLines(path, Encoding.Default))
             {
                 string[] data = line.Split(';');
                 ReaderBook readerBook = new ReaderBook();
@@ -230,13 +252,15 @@ namespace DummyDB
                 readerBook.TakeDate = CheckDate(count, data[2], path, 3);
                 readerBook.ReturnDate = CheckDate(count, data[3], path, 4);
 
+                CheckTakeReturnTime(readerBook.TakeDate, readerBook.ReturnDate, path, count);
+
                 readerBooks.Add(readerBook);
                 count++;
             }
             return readerBooks;
         }
 
-        public static Reader CheckReader(int count, string readerId, string path)
+        static Reader CheckReader(int count, string readerId, string path)
         {
             uint id;
             if (uint.TryParse(readerId, out uint num))
@@ -258,7 +282,7 @@ namespace DummyDB
             throw new ArgumentException($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер 1, введен несуществующий читатель");
         }
 
-        public static Book CheckBook(int count, string bookId, string path)
+        static Book CheckBook(int count, string bookId, string path)
         {
             uint id;
             if (uint.TryParse(bookId, out uint num))
@@ -280,8 +304,12 @@ namespace DummyDB
             throw new ArgumentException($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер 2, введена несуществующая книга");
         }
 
-        public static DateTime CheckDate(int count, string date, string path, int column)
+        static DateTime CheckDate(int count, string date, string path, int column)
         {
+            if (column == 4 && date == "")
+            {
+                return DateTime.MinValue;
+            }
             if (DateTime.TryParse(date, out DateTime dateTime))
             {
                 return dateTime;
@@ -292,12 +320,20 @@ namespace DummyDB
             }
         }
 
-        public static void CheckSize(int rightLen, int len, string path)
+        static void CheckSize(int rightLen, int len, string path)
         {
             if (rightLen != len)
             {
                 throw new Exception($"Количество столбцов в файле <{path}> не соответствует заданому стандарту");
             }
+        }
+
+        static void CheckTakeReturnTime(DateTime takeTime, DateTime returnTime, string path, int count)
+        {
+            if (returnTime == DateTime.MinValue)
+                return;
+            if(takeTime > returnTime)
+                throw new Exception($"Некорректные даты в файле {path}, строка {count}, 3 и 4 столбец. Дата выдачи не может быть больше даты сдачи книги");
         }
     }
 }
