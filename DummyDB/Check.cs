@@ -8,6 +8,7 @@ namespace DummyDB
         public static List<uint> idBook = new List<uint>();
         public static List<Reader> readers = new List<Reader>();
         public static List<Book> books = new List<Book>();
+        public static List <uint> shelfNumbers = new List<uint>();
 
         public static List<Reader> GetReaderData(string path)
         {
@@ -36,11 +37,8 @@ namespace DummyDB
                 {
                     throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбец номер 1. Описание ошибки: повторяющийся ID");
                 }
-                else
-                {
-                    idReader.Add(id);
-                    return id;
-                }
+                idReader.Add(id);
+                return id;
             }
             else
             {
@@ -91,11 +89,8 @@ namespace DummyDB
                 {
                     throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 1. Описание ошибки: повторяющийся ID");
                 }
-                else
-                {
-                    idBook.Add(id);
-                    return id;
-                }
+                idBook.Add(id);
+                return id;
             }
             else
             {
@@ -109,10 +104,7 @@ namespace DummyDB
             {
                 throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 2. Описание ошибки: Отсутствует имя автора");
             }
-            else
-            {
-                return author;
-            }
+            return author;
         }
 
         static string CheckBookName(int count, string name, string path)
@@ -121,10 +113,7 @@ namespace DummyDB
             {
                 throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 3. Описание ошибки: Отсутствует название произведения");
             }
-            else
-            {
-                return name;
-            }
+            return name;
         }
 
         static uint CheckBookPublicationDate(int count, string[] data, string path)
@@ -162,6 +151,11 @@ namespace DummyDB
         {
             if (uint.TryParse(data[5], out uint shelfNumber))
             {
+                if(shelfNumbers.Contains(shelfNumber))
+                {
+                    throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 6. Описание ошибки: повторяющийся номер полки");
+                }
+                shelfNumbers.Add(shelfNumber);
                 return shelfNumber;
             }
             else
@@ -198,7 +192,7 @@ namespace DummyDB
         {
             if (!uint.TryParse(readerId, out uint id))
             {
-                throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер 1, некорректный ID читателя");
+                throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер 1. Описание ошибки: некорректный ID читателя");
             }
 
             foreach (Reader reader in readers)
@@ -208,14 +202,14 @@ namespace DummyDB
                     return reader;
                 }
             }
-            throw new ArgumentException($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер 1, введен несуществующий читатель");
+            throw new ArgumentException($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер 1. Описание ошибки: введен несуществующий читатель");
         }
 
         static Book CheckBook(int count, string bookId, string path)
         {
             if (!uint.TryParse(bookId, out uint id))
             {
-                throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер 2, некоррекнтый ID книги");
+                throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер 2. Описание ошибки: некоррекнтый ID книги");
             }
 
             foreach (Book book in books)
@@ -225,7 +219,7 @@ namespace DummyDB
                     return book;
                 }
             }
-            throw new ArgumentException($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер 2, введена несуществующая книга");
+            throw new ArgumentException($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер 2, Описание ошибки: введена несуществующая книга");
         }
 
         static DateTime CheckDate(int count, string date, string path, int column)
@@ -240,7 +234,7 @@ namespace DummyDB
             }
             else
             {
-                throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер {column}, некоррекнтная дата");
+                throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер {column}. Описание ошибки: некоррекнтная дата");
             }
         }
 
@@ -257,7 +251,7 @@ namespace DummyDB
             if (returnTime == DateTime.MinValue)
                 return;
             if(takeTime > returnTime)
-                throw new Exception($"Некорректные даты в файле {path}, строка {count}, 3 и 4 столбец. Дата выдачи не может быть позже даты сдачи книги");
+                throw new Exception($"Некорректные даты в файле {path}, строка {count}, 3 и 4 столбец. Описание ошибки: дата выдачи не может быть позже даты сдачи книги");
         }
     }
 }
