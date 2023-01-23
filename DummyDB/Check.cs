@@ -8,7 +8,6 @@ namespace DummyDB
         public static List<uint> idBook = new List<uint>();
         public static List<Reader> readers = new List<Reader>();
         public static List<Book> books = new List<Book>();
-        public static List <uint> shelfNumbers = new List<uint>();
 
         public static List<Reader> GetReaderData(string path)
         {
@@ -148,11 +147,6 @@ namespace DummyDB
         {
             if (uint.TryParse(data[5], out uint shelfNumber))
             {
-                if(shelfNumbers.Contains(shelfNumber))
-                {
-                    throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 6. Описание ошибки: повторяющийся номер полки");
-                }
-                shelfNumbers.Add(shelfNumber);
                 return shelfNumber;
             }
             else
