@@ -52,10 +52,7 @@ namespace DummyDB
             {
                 throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 2. Описание ошибки: Отсутствует имя читателя");
             }
-            else
-            {
-                return fullName;
-            }
+            return fullName;
         }
 
         public static List<Book> GetBookData(string path)
