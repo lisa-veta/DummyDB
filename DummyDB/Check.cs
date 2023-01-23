@@ -8,7 +8,8 @@ namespace DummyDB
         public static List<uint> idBook = new List<uint>();
         public static List<Reader> readers = new List<Reader>();
         public static List<Book> books = new List<Book>();
-        public static List<Reader> CheckDataReader(string path)
+
+        public static List<Reader> GetReaderData(string path)
         {
             int count = 1;
             foreach(string line in File.ReadAllLines(path, Encoding.Default))
@@ -29,31 +30,29 @@ namespace DummyDB
 
         static uint CheckReaderId(int count, string[] data, string path)
         {
-            uint id;
-            if (uint.TryParse(data[0], out uint num))
+            if (uint.TryParse(data[0], out uint id))
             {
-                if (idReader.Contains(num))
+                if (idReader.Contains(id))
                 {
                     throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбец номер 1. Описание ошибки: повторяющийся ID");
                 }
                 else
                 {
-                    id = num;
                     idReader.Add(id);
+                    return id;
                 }
             }
             else
             {
-                throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбец номер 1. Описание ошибки: некорректное ID. ID должно быть целым, уникальным, положительным числом.");
+                throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбец номер 1. Описание ошибки: некорректное ID. ID должно быть целым, уникальным, положительным числом");
             }
-            return id;
         }
 
         static string CheckReaderFullName(int count, string fullName, string path)
         {
             if (fullName == "")
             {
-                throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 2. Описание ошибки: Отсутствует имя автора");
+                throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 2. Описание ошибки: Отсутствует имя читателя");
             }
             else
             {
@@ -61,15 +60,16 @@ namespace DummyDB
             }
         }
 
-        public static List<Book> CheckDataBook(string path)
+        public static List<Book> GetBookData(string path)
         {
             int count = 1;
             foreach (string line in File.ReadAllLines(path, Encoding.Default))
             {
                 string[] data = line.Split(';');
+                Book book = new Book();
+
                 CheckSize(data.Length, 6, path);
 
-                Book book = new Book();
                 book.Id = CheckBookId(count, data, path);
                 book.Author = CheckBookAuthor(count, data[1], path);
                 book.Name = CheckBookName(count, data[2], path);
@@ -85,24 +85,22 @@ namespace DummyDB
 
         static uint CheckBookId(int count, string[] data, string path)
         {
-            uint id;
-            if (uint.TryParse(data[0], out uint num))
+            if (uint.TryParse(data[0], out uint id))
             {
-                if (idBook.Contains(num))
+                if (idBook.Contains(id))
                 {
                     throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 1. Описание ошибки: повторяющийся ID");
                 }
                 else
                 {
-                    id = num;
                     idBook.Add(id);
+                    return id;
                 }
             }
             else
             {
                 throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 1. Описание ошибки: некорректное ID. ID должно быть целым, уникальным, положительным числом.");
             }
-            return id;
         }
         
         static string CheckBookAuthor(int count, string author, string path)
@@ -131,12 +129,11 @@ namespace DummyDB
 
         static uint CheckBookPublicationDate(int count, string[] data, string path)
         {
-            uint publicationDate;
-            if (uint.TryParse(data[3], out uint num))
+            if (uint.TryParse(data[3], out uint publicationDate))
             {
-                if (num > 1500 || num < 2024)
+                if (publicationDate > 1500 && publicationDate < 2024)
                 {
-                    publicationDate = num;
+                   return publicationDate;
                 }
                 else
                 {
@@ -147,38 +144,33 @@ namespace DummyDB
             {
                 throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 4. Описание ошибки: Некорректный год издания книги");
             }
-            return publicationDate;
         }
 
         static uint CheckBookСaseNumber(int count, string[] data, string path)
         {
-            uint caseNumber;
-            if (uint.TryParse(data[4], out uint num))
+            if (uint.TryParse(data[4], out uint caseNumber))
             {
-                caseNumber = num;
+                return caseNumber;
             }
             else
             {
                 throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 5. Описание ошибки: Некорректный номер шкафа");
             }
-            return caseNumber;
         }
 
         static uint CheckBookShelfNumber(int count, string[] data, string path)
         {
-            uint shelfNumber;
-            if (uint.TryParse(data[5], out uint num))
+            if (uint.TryParse(data[5], out uint shelfNumber))
             {
-                shelfNumber = num;
+                return shelfNumber;
             }
             else
             {
                 throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 6. Описание ошибки: Некорректный номер полки ");
             }
-            return shelfNumber;
         }
 
-        public static List<ReaderBook> CheckDataReaderBook(string path)
+        public static List<ReaderBook> GetReaderBookData(string path)
         {
             List<ReaderBook> readerBooks = new List<ReaderBook>();
             int count = 1;
@@ -204,12 +196,7 @@ namespace DummyDB
 
         static Reader CheckReader(int count, string readerId, string path)
         {
-            uint id;
-            if (uint.TryParse(readerId, out uint num))
-            {
-                id = num;
-            }
-            else
+            if (!uint.TryParse(readerId, out uint id))
             {
                 throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер 1, некорректный ID читателя");
             }
@@ -226,12 +213,7 @@ namespace DummyDB
 
         static Book CheckBook(int count, string bookId, string path)
         {
-            uint id;
-            if (uint.TryParse(bookId, out uint num))
-            {
-                id = num;
-            }
-            else
+            if (!uint.TryParse(bookId, out uint id))
             {
                 throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер 2, некоррекнтый ID книги");
             }

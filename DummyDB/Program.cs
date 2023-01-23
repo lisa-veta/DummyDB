@@ -10,9 +10,9 @@ namespace DummyDB
     {
         static void Main()
         {
-            List<Reader> readers = Check.CheckDataReader("Data\\Reader.csv");
-            List<Book> books = Check.CheckDataBook("Data\\Book.csv");
-            List<ReaderBook> readerBooks = Check.CheckDataReaderBook("Data\\ReaderBook.csv");
+            List<Reader> readers = Check.GetReaderData("Data\\Reader.csv");
+            List<Book> books = Check.GetBookData("Data\\Book.csv");
+            List<ReaderBook> readerBooks = Check.GetReaderBookData("Data\\ReaderBook.csv");
 
             Screen.EnterInform(books, readerBooks);
         }
