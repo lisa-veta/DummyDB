@@ -7,7 +7,7 @@
       "isPrimary": true
     },
     {
-      "name": "fulName",
+      "name": "fullName",
       "type": "string",
       "isPrimary": false
     }

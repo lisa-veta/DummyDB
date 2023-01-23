@@ -4,11 +4,13 @@
     {
       "name": "readerId",
       "type": "uint",
+      "referencedTable": "Reader",
       "isPrimary": true
     },
     {
       "name": "bookId",
       "type": "uint",
+      "referencedTable": "Book",
       "isPrimary": true
     },
     {

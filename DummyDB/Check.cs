@@ -20,7 +20,7 @@ namespace DummyDB
                 CheckSize(data.Length, 2, path);
 
                 reader.Id = CheckReaderId(count, data, path);
-                reader.FullName = CheckReaderFullName(count, data[1], path);
+                reader.FullName = CheckStringLine(count, 2, data[1], path);
                 
                 readers.Add(reader);
                 count++;
@@ -45,13 +45,13 @@ namespace DummyDB
             }
         }
 
-        static string CheckReaderFullName(int count, string fullName, string path)
+        static string CheckStringLine(int count, int column, string line, string path)
         {
-            if (fullName == "")
+            if (line == "")
             {
-                throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 2. Описание ошибки: отсутствует имя читателя");
+                throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер {column}. Описание ошибки: отсутствует имя читателя");
             }
-            return fullName;
+            return line;
         }
 
         public static List<Book> GetBookData(string path)
@@ -65,8 +65,8 @@ namespace DummyDB
                 CheckSize(data.Length, 6, path);
 
                 book.Id = CheckBookId(count, data, path);
-                book.Author = CheckBookAuthor(count, data[1], path);
-                book.Name = CheckBookName(count, data[2], path);
+                book.Author = CheckStringLine(count, 2, data[1], path);
+                book.Name = CheckStringLine(count, 3, data[2], path);
                 book.PublicationDate = CheckBookPublicationDate(count, data, path);
                 book.СaseNumber = CheckBookСaseNumber(count, data, path);
                 book.ShelfNumber = CheckBookShelfNumber(count, data, path);
@@ -92,24 +92,6 @@ namespace DummyDB
             {
                 throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 1. Описание ошибки: некорректное ID. ID должно быть целым, уникальным, положительным числом.");
             }
-        }
-        
-        static string CheckBookAuthor(int count, string author, string path)
-        {
-            if(author == "")
-            {
-                throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 2. Описание ошибки: отсутствует имя автора");
-            }
-            return author;
-        }
-
-        static string CheckBookName(int count, string name, string path)
-        {
-            if (name == "")
-            {
-                throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер 3. Описание ошибки: отсутствует название произведения");
-            }
-            return name;
         }
 
         static uint CheckBookPublicationDate(int count, string[] data, string path)
