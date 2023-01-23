@@ -199,7 +199,7 @@ namespace DummyDB
                     return reader;
                 }
             }
-            throw new ArgumentException($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер 1. Описание ошибки: введен несуществующий читатель");
+            throw new ArgumentException($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер 1. Описание ошибки: введен несуществующий ID читателя");
         }
 
         static Book CheckBook(int count, string bookId, string path)
@@ -216,7 +216,7 @@ namespace DummyDB
                     return book;
                 }
             }
-            throw new ArgumentException($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер 2, Описание ошибки: введена несуществующая книга");
+            throw new ArgumentException($"Ошибка в файле <{path}>, в строке номер {count}, в столбце номер 2, Описание ошибки: введен несуществующий ID книги");
         }
 
         static DateTime CheckDate(int count, string date, string path, int column)
