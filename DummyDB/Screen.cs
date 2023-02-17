@@ -4,13 +4,14 @@ namespace DummyDB
 {
     class Screen
     {
-        private static int maxLenFirst = 0;
-        private static int maxLenSecond = 0;
-        private static int maxLenThird = 0;
-        private static int maxLenFourth = 0;
+        private static int maxLenFirst = 5;
+        private static int maxLenSecond = 8;
+        private static int maxLenThird = 6;
+        private static int maxLenFourth = 10;
         public static void EnterInform(List<Book> books, List<ReaderBook> readerBooks)
         {
-            
+            GetMaxLen(books, readerBooks);
+
         }
         private static void GetMaxLen(List<Book> books, List<ReaderBook> readerBooks)
         {
@@ -25,6 +26,20 @@ namespace DummyDB
                     if (book.Id == readerBook.Book.Id && readerBook.ReturnDate == DateTime.MinValue)
                         maxLenThird = readerBook.Reader.FullName.Length;
                 }
+            }
+        }
+
+        private static void StartEnter(List<Book> books, List<ReaderBook> readerBooks)
+        {
+            StringBuilder table = new StringBuilder();
+            table.Append("|" + " " + string.Join("-", maxLenFirst));
+            table.Append("|" + " " + string.Join("-", maxLenSecond));
+            table.Append("|" + " " + string.Join("-", maxLenThird));
+            table.Append("|" + " " + string.Join("-", maxLenFourth) + " " + "|");
+            Console.Write("| ");
+            for (int i = 0; i < books.Count; i++)
+            {
+                Console.Write("| ");
             }
         }
     }
