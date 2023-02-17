@@ -21,7 +21,7 @@ namespace DummyDB
         private static int shelfN = 5;
         private static int minYear = 1500;
         private static int maxYear = 2023;
-        private static int columnLenReader, columnNameReader = 2;
+        private static int columnLenReader = 2, columnNameReader = 2;
         private static int columnLenBook = 6;
         private static int columnLenReaderBook = 4;
         private static int columnBookAuthor = 2;
@@ -31,15 +31,14 @@ namespace DummyDB
 
 
 
-        public static List<Reader> CheckDataReader(string path)
+        public static List<Reader> GetReaderData(string path)
         {
             int count = 1;
             foreach(string line in File.ReadAllLines(path, Encoding.Default))
             {
                 string[] data = line.Split(';');
                 Reader reader = new Reader();
-
-                CheckSize(data.Length, columnLenReader, path);
+                CheckSize(columnLenReader, data.Length, path);
 
                 reader.Id = CheckReaderId(count, data[idData], path);
                 reader.FullName = CheckStringLine(count, columnNameReader, data[readerName], path);
