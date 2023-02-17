@@ -43,6 +43,7 @@ namespace DummyDB
             Console.Write("| Читает" + new string(' ', maxLenThird - 6) + " ");
             Console.WriteLine("| Взял" + new string(' ', maxLenFourth - 4) + " |");
             Console.WriteLine(table.ToString());
+
             foreach (ReaderBook readerBook in readerBooks)
             {
                 Console.Write($"| {readerBook.Book.Author}" + new string(' ', maxLenFirst - readerBook.Book.Author.Length) + " ");
