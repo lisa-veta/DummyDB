@@ -9,7 +9,23 @@ namespace DummyDB
         public static List<Reader> readers = new List<Reader>();
         public static List<Book> books = new List<Book>();
 
-        public static List<Reader> GetReaderData(string path)
+        private static int idData = 0;
+        private static int authorName = 1;
+        private static int idBookData = 1;
+        private static int bookName = 2;
+        private static int takeDate = 2;
+        private static int bookDate = 3;
+        private static int returnDate = 3;
+        private static int caseN = 4;
+        private static int shelfN = 5;
+        private static int minYear = 1500;
+        private static int maxYear = 2023;
+        private static int columnLenReader = 2;
+        private static int columnLenBook = 6;
+        private static int columnLenReaderBook = 4;
+
+
+        public static List<Reader> CheckDataReader(string path)
         {
             int count = 1;
             foreach(string line in File.ReadAllLines(path, Encoding.Default))
@@ -17,7 +33,7 @@ namespace DummyDB
                 string[] data = line.Split(';');
                 Reader reader = new Reader();
 
-                CheckSize(data.Length, 2, path);
+                CheckSize(data.Length, columnLenReader, path);
 
                 reader.Id = CheckReaderId(count, data, path);
                 reader.FullName = CheckStringLine(count, 2, data[1], path);
