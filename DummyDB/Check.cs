@@ -55,7 +55,6 @@ namespace DummyDB
                 }
                 idReader.Add(id);
                 return id;
-
             }
             else
             {
