@@ -4,6 +4,5 @@
     {
         public uint Id;
         public string FullName;
-
     }
 }
