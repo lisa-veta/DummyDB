@@ -24,6 +24,11 @@ namespace DummyDB
         private static int columnLenReader, columnNameReader = 2;
         private static int columnLenBook = 6;
         private static int columnLenReaderBook = 4;
+        private static int columnBookAuthor = 2;
+        private static int columnBookName = 3;
+        private static int columnTakeDate = 3;
+        private static int columnReturnDate = 4;
+
 
 
         public static List<Reader> CheckDataReader(string path)
@@ -82,8 +87,8 @@ namespace DummyDB
                 CheckSize(data.Length, columnLenBook, path);
 
                 book.Id = CheckBookId(count, data[idData], path);
-                book.Author = CheckStringLine(count, 2, data[authorName], path);
-                book.Name = CheckStringLine(count, 3, data[bookName], path);
+                book.Author = CheckStringLine(count, columnBookAuthor, data[authorName], path);
+                book.Name = CheckStringLine(count, columnBookName, data[bookName], path);
                 book.PublicationDate = CheckBookPublicationDate(count, data[bookDate], path);
                 book.СaseNumber = CheckBookСaseNumber(count, data[caseN], path);
                 book.ShelfNumber = CheckBookShelfNumber(count, data[shelfN], path);
@@ -167,8 +172,8 @@ namespace DummyDB
 
                 readerBook.Reader = CheckReader(count, data[idData], path);
                 readerBook.Book = CheckBook(count, data[idBookData], path);
-                readerBook.TakeDate = CheckDate(count, data[takeDate], path, 3);
-                readerBook.ReturnDate = CheckDate(count, data[returnDate], path, 4);
+                readerBook.TakeDate = CheckDate(count, data[takeDate], path, columnTakeDate);
+                readerBook.ReturnDate = CheckDate(count, data[returnDate], path, columnReturnDate);
 
                 CheckTakeReturnTime(readerBook.TakeDate, readerBook.ReturnDate, path, count);
 
