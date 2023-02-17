@@ -10,6 +10,7 @@ namespace DummyDB
         public static List<Book> books = new List<Book>();
 
         private static int idData = 0;
+        private static int readerName = 1;
         private static int authorName = 1;
         private static int idBookData = 1;
         private static int bookName = 2;
@@ -20,7 +21,7 @@ namespace DummyDB
         private static int shelfN = 5;
         private static int minYear = 1500;
         private static int maxYear = 2023;
-        private static int columnLenReader = 2;
+        private static int columnLenReader, columnNameReader = 2;
         private static int columnLenBook = 6;
         private static int columnLenReaderBook = 4;
 
@@ -35,8 +36,8 @@ namespace DummyDB
 
                 CheckSize(data.Length, columnLenReader, path);
 
-                reader.Id = CheckReaderId(count, data, path);
-                reader.FullName = CheckStringLine(count, 2, data[1], path);
+                reader.Id = CheckReaderId(count, data[idData], path);
+                reader.FullName = CheckStringLine(count, columnNameReader, data[readerName], path);
                 
                 readers.Add(reader);
                 count++;
@@ -44,9 +45,9 @@ namespace DummyDB
             return readers;
         }
 
-        static uint CheckReaderId(int count, string[] data, string path)
+        static uint CheckReaderId(int count, string data, string path)
         {
-            if (uint.TryParse(data[0], out uint id))
+            if (uint.TryParse(data, out uint id))
             {
                 if (idReader.Contains(id))
                 {
@@ -65,7 +66,7 @@ namespace DummyDB
         {
             if (line == "")
             {
-                throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер {column}. Описание ошибки: отсутствует имя читателя");
+                throw new Exception($"Ошибка в файле <{path}>, в строке номер {count}, столбце номер {column}. Описание ошибки: отсутствует нужная строка");
             }
             return line;
         }
@@ -78,14 +79,14 @@ namespace DummyDB
                 string[] data = line.Split(';');
                 Book book = new Book();
 
-                CheckSize(data.Length, 6, path);
+                CheckSize(data.Length, columnLenBook, path);
 
-                book.Id = CheckBookId(count, data, path);
-                book.Author = CheckStringLine(count, 2, data[1], path);
-                book.Name = CheckStringLine(count, 3, data[2], path);
-                book.PublicationDate = CheckBookPublicationDate(count, data, path);
-                book.СaseNumber = CheckBookСaseNumber(count, data, path);
-                book.ShelfNumber = CheckBookShelfNumber(count, data, path);
+                book.Id = CheckBookId(count, data[idData], path);
+                book.Author = CheckStringLine(count, 2, data[authorName], path);
+                book.Name = CheckStringLine(count, 3, data[bookName], path);
+                book.PublicationDate = CheckBookPublicationDate(count, data[bookDate], path);
+                book.СaseNumber = CheckBookСaseNumber(count, data[caseN], path);
+                book.ShelfNumber = CheckBookShelfNumber(count, data[shelfN], path);
 
                 books.Add(book);
                 count++;
@@ -93,9 +94,9 @@ namespace DummyDB
             return books;
         }
 
-        static uint CheckBookId(int count, string[] data, string path)
+        static uint CheckBookId(int count, string data, string path)
         {
-            if (uint.TryParse(data[0], out uint id))
+            if (uint.TryParse(data, out uint id))
             {
                 if (idBook.Contains(id))
                 {
@@ -110,11 +111,11 @@ namespace DummyDB
             }
         }
 
-        static uint CheckBookPublicationDate(int count, string[] data, string path)
+        static uint CheckBookPublicationDate(int count, string data, string path)
         {
-            if (uint.TryParse(data[3], out uint publicationDate))
+            if (uint.TryParse(data, out uint publicationDate))
             {
-                if (publicationDate > 1500 && publicationDate < 2024)
+                if (publicationDate > minYear && publicationDate < maxYear)
                 {
                    return publicationDate;
                 }
@@ -129,9 +130,9 @@ namespace DummyDB
             }
         }
 
-        static uint CheckBookСaseNumber(int count, string[] data, string path)
+        static uint CheckBookСaseNumber(int count, string data, string path)
         {
-            if (uint.TryParse(data[4], out uint caseNumber))
+            if (uint.TryParse(data, out uint caseNumber))
             {
                 return caseNumber;
             }
@@ -141,9 +142,9 @@ namespace DummyDB
             }
         }
 
-        static uint CheckBookShelfNumber(int count, string[] data, string path)
+        static uint CheckBookShelfNumber(int count, string data, string path)
         {
-            if (uint.TryParse(data[5], out uint shelfNumber))
+            if (uint.TryParse(data, out uint shelfNumber))
             {
                 return shelfNumber;
             }
@@ -162,12 +163,12 @@ namespace DummyDB
                 string[] data = line.Split(';');
                 ReaderBook readerBook = new ReaderBook();
 
-                CheckSize(data.Length, 4, path);
+                CheckSize(data.Length, columnLenReaderBook, path);
 
-                readerBook.Reader = CheckReader(count, data[0], path);
-                readerBook.Book = CheckBook(count, data[1], path);
-                readerBook.TakeDate = CheckDate(count, data[2], path, 3);
-                readerBook.ReturnDate = CheckDate(count, data[3], path, 4);
+                readerBook.Reader = CheckReader(count, data[idData], path);
+                readerBook.Book = CheckBook(count, data[idBookData], path);
+                readerBook.TakeDate = CheckDate(count, data[takeDate], path, 3);
+                readerBook.ReturnDate = CheckDate(count, data[returnDate], path, 4);
 
                 CheckTakeReturnTime(readerBook.TakeDate, readerBook.ReturnDate, path, count);
 
