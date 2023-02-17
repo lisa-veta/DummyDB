@@ -4,19 +4,27 @@ namespace DummyDB
 {
     class Screen
     {
+        private static int maxLenFirst = 0;
+        private static int maxLenSecond = 0;
+        private static int maxLenThird = 0;
+        private static int maxLenFourth = 0;
         public static void EnterInform(List<Book> books, List<ReaderBook> readerBooks)
         {
-            Console.OutputEncoding = Encoding.UTF8;
-            Console.WriteLine("Cписок всех книг в библиотеке:\n");
-            foreach(Book book in books)
+            
+        }
+        private static void GetMaxLen(List<Book> books, List<ReaderBook> readerBooks)
+        {
+            foreach (Book book in books)
             {
-                Console.Write($"\"{book.Name}\", {book.Author}");
-                foreach(ReaderBook readerBook in readerBooks)
+                if(book.Author.Length > maxLenFirst)
+                    maxLenFirst = book.Author.Length;
+                if(book.Name.Length > maxLenSecond)
+                    maxLenSecond = book.Name.Length;
+                foreach (ReaderBook readerBook in readerBooks)
                 {
                     if (book.Id == readerBook.Book.Id && readerBook.ReturnDate == DateTime.MinValue)
-                        Console.Write($", читает {readerBook.Reader.FullName}");
+                        maxLenThird = readerBook.Reader.FullName.Length;
                 }
-                Console.WriteLine("\n");
             }
         }
     }
