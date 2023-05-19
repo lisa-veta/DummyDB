@@ -5,10 +5,10 @@ namespace DummyDB
 {
     class Screen
     {
-        private static int maxLenFirst = 5;
-        private static int maxLenSecond = 8;
-        private static int maxLenThird = 6;
-        private static int maxLenFourth = 18;
+        private static int maxLenFirst = "Aвтор".Length;
+        private static int maxLenSecond = "Название".Length;
+        private static int maxLenThird = "Читает".Length;
+        private static int maxLenFourth = DateTime.MinValue.ToString().Length;
         public static void EnterInform(List<Book> books, List<ReaderBook> readerBooks)
         {
             GetMaxLen(books, readerBooks);
@@ -38,25 +38,25 @@ namespace DummyDB
             table.Append("|" + " " + new string('-', maxLenThird) + " ");
             table.Append("|" + " " + new string('-', maxLenFourth) + " " + "|");
 
-            Console.Write("| Aвтор" + new string(' ', maxLenFirst - 5) + " ");
-            Console.Write("| Название" + new string(' ', maxLenSecond - 8) + " ");
-            Console.Write("| Читает" + new string(' ', maxLenThird - 6) + " ");
-            Console.WriteLine("| Взял" + new string(' ', maxLenFourth - 4) + " |");
+            Console.Write("| Aвтор" + new string(' ', maxLenFirst - "Aвтор".Length) + " ");
+            Console.Write("| Название" + new string(' ', maxLenSecond - "Название".Length) + " ");
+            Console.Write("| Читает" + new string(' ', maxLenThird - "Читает".Length) + " ");
+            Console.WriteLine("| Взял" + new string(' ', maxLenFourth - "Взял".Length) + " |");
             Console.WriteLine(table.ToString());
 
             foreach (ReaderBook readerBook in readerBooks)
             {
-                Console.Write($"| {readerBook.Book.Author}" + new string(' ', maxLenFirst - readerBook.Book.Author.Length) + " ");
-                Console.Write($"| {readerBook.Book.Name}" + new string(' ', maxLenSecond - readerBook.Book.Name.Length) + " ");
+                Console.Write($"| {readerBook.Book.Author}" + new string(' ', maxLenFirst - readerBook.Book.Author.Length + 1));
+                Console.Write($"| {readerBook.Book.Name}" + new string(' ', maxLenSecond - readerBook.Book.Name.Length + 1));
                 
                 if (readerBook.ReturnDate == DateTime.MinValue)
                 {
-                    Console.Write($"| {readerBook.Reader.FullName}" + new string(' ', maxLenThird - readerBook.Reader.FullName.Length) + " ");
-                    Console.WriteLine($"| {readerBook.TakeDate}" + new string(' ', maxLenFourth - 18) + " |");
+                    Console.Write($"| {readerBook.Reader.FullName}" + new string(' ', maxLenThird - readerBook.Reader.FullName.Length + 1));
+                    Console.WriteLine($"| {readerBook.TakeDate}" + " |");
                 }
                 else
                 {
-                    Console.Write($"| " + new string(' ', maxLenThird ) + " ");
+                    Console.Write($"| " + new string(' ', maxLenThird + 1 ));
                     Console.WriteLine("| " + new string(' ', maxLenFourth ) + " |");
                 }
                 Console.WriteLine(table.ToString());
