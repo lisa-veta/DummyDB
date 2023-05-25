@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace DummyDB
@@ -9,10 +10,12 @@ namespace DummyDB
         private static int maxLenSecond = "Название".Length;
         private static int maxLenThird = "Читает".Length;
         private static int maxLenFourth = DateTime.MinValue.ToString().Length;
+        private static StringBuilder table = new StringBuilder();
         public static void EnterInform(List<Book> books, List<ReaderBook> readerBooks)
         {
             GetMaxLen(books, readerBooks);
-            StartEnter(readerBooks);
+            StartEnter();
+            FillData(readerBooks);
         }
         private static void GetMaxLen(List<Book> books, List<ReaderBook> readerBooks)
         {
@@ -30,9 +33,8 @@ namespace DummyDB
             }
         }
 
-        private static void StartEnter(List<ReaderBook> readerBooks)
+        private static void StartEnter()
         {
-            StringBuilder table = new StringBuilder();
             table.Append("|" + " " + new string('-', maxLenFirst) + " ");
             table.Append("|" + " " + new string('-', maxLenSecond) + " ");
             table.Append("|" + " " + new string('-', maxLenThird) + " ");
@@ -43,12 +45,15 @@ namespace DummyDB
             Console.Write("| Читает" + new string(' ', maxLenThird - "Читает".Length) + " ");
             Console.WriteLine("| Взял" + new string(' ', maxLenFourth - "Взял".Length) + " |");
             Console.WriteLine(table.ToString());
+        }
 
+        private static void FillData(List<ReaderBook> readerBooks)
+        {
             foreach (ReaderBook readerBook in readerBooks)
             {
                 Console.Write($"| {readerBook.Book.Author}" + new string(' ', maxLenFirst - readerBook.Book.Author.Length + 1));
                 Console.Write($"| {readerBook.Book.Name}" + new string(' ', maxLenSecond - readerBook.Book.Name.Length + 1));
-                
+
                 if (readerBook.ReturnDate == DateTime.MinValue)
                 {
                     Console.Write($"| {readerBook.Reader.FullName}" + new string(' ', maxLenThird - readerBook.Reader.FullName.Length + 1));
@@ -56,8 +61,8 @@ namespace DummyDB
                 }
                 else
                 {
-                    Console.Write($"| " + new string(' ', maxLenThird + 1 ));
-                    Console.WriteLine("| " + new string(' ', maxLenFourth ) + " |");
+                    Console.Write($"| " + new string(' ', maxLenThird + 1));
+                    Console.WriteLine("| " + new string(' ', maxLenFourth) + " |");
                 }
                 Console.WriteLine(table.ToString());
             }
